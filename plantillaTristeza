@@ -1,0 +1,46 @@
+clc; 
+clear;
+
+tt=zeros(50,16384);%inicializacion de matriz de promedios
+ %long=50000;
+
+for k=1 : 36  %cargamos 36 señales del primer sentimiento
+nombre=['C:\Users\Paula\Desktop\Senales\tp final\base de datos emociones\wav\Tristeza T - copia\tristeza (',num2str(k),').wav'];
+vt=wavread(nombre);
+
+% if(length(vf)<long) %obtenemos la señal de menor longitud y determinamos cuanto silencio cortar del inicio(2000) y la longitud de la señal(16384)
+%     long=length(vf);
+%     indice=k;
+%     end
+
+for j=1:16384  %cargamos en una matriz todas las señales del sentimiento cortadas y con el tamaño determinado
+wt(j,k)=vt(j+2000);
+end
+
+%normalizamos las señales
+norma=norm(wt(:,k));
+wt(:,k)=wt(:,k)./norma;
+
+%calculamos espectros de todas las señales
+tfaux=tocon1(wt(:,k),1,50,1); %tocon1 no plotea
+%y vamos sumando los espectros para calcular el promedio de espectros
+tt=tt + tfaux;
+end
+%dividimos por la cantidad de señales
+promediot=tt/36;
+
+plantnormalt=normalizar(promediot);
+plantnormalt=plantnormalt+1;
+
+figure(2)
+%Plantilla Aburrimiento
+ colormap(jet);
+   %colormap(1-gray(256))
+   imagesc(linspace(0,16347,16384),linspace(1,50,10),(plantnormalt));
+   colorbar
+   axis('xy')
+   title('Plantilla Tristeza');
+   xlabel('Time')
+   ylabel('Scale')
+
+   
