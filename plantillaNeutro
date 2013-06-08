@@ -1,0 +1,49 @@
+clc; 
+clear;
+
+t=zeros(50,16384);%inicializacion de matriz de promedios
+
+for k=1 : 36  %cargamos 36 señales del primer sentimiento
+nombre=['C:\Users\cristina\Desktop\base de datos emociones\wav\Neutro N - copia\neutro (',num2str(k),').wav'];
+v=wavread(nombre);
+
+
+% if(length(v)<long) %obtenemos la señal de menor longitud y determinamos cuanto silencio cortar del inicio(2000) y la longitud de la señal(16384)
+%     long=length(v);
+%     indice=k;
+%     end
+
+for j=1:16384  %cargamos en una matriz todas las señales del sentimiento cortadas y con el tamaño determinado
+w(j,k)=v(j+2000);
+end
+
+%normalizamos las señales
+norma=norm(w(:,k));
+w(:,k)=w(:,k)./norma;
+
+%calculamos espectros de todas las señales
+taux=tocon1(w(:,k),1,50,1); %tocon1 no plotea
+%y vamos sumando los espectros para calcular el promedio de espectros
+t=t + taux;
+end
+%dividimos por la cantidad de señales
+promedio=t/36;
+
+plantnormal=normalizar(promedio);
+plantnormal=plantnormal+1;
+
+%Plantilla Aburrimiento
+ colormap(jet);
+   %colormap(1-gray(256))
+   imagesc(linspace(0,16347,16384),linspace(1,50,10),abs(plantnormal));
+   colorbar
+   axis('xy')
+   title('Plantilla Neutro');
+   xlabel('Time')
+   ylabel('Scale')
+
+   
+   
+  %----------------------------------------------------------------------
+  %-----------------------------------------------------------------------
+  
